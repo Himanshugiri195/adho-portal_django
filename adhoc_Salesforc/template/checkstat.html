@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>Check Status</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+ 
+
+</head>
+
+<body>
+  
+
+  
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item">
+        <img src="https://raw.githubusercontent.com/Himanshugiri195/adhoc_two/main/Component%202%20%E2%80%93%201.svg?token=AG4OJM6G2PCRNX3GRYU2JYK7WPFZ2" width="112" height="28">
+      </a>
+  
+    </div>
+  
+    <div id="navbarBasicExample" class="navbar-menu">
+  
+      
+    </div>
+  </nav>
+  <nav
+  class="navbar has-background-danger-dark"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="navbar-brand">
+    <a class="navbar-item has-text-white" href="{% url 'create' %}">
+      New Request
+    </a>
+  </div>
+  <div class="navbar-brand">
+    <a class="navbar-item has-text-white" href="{% url 'checkreq' %}">
+      Get Status
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu is-active">
+    <div class="navbar-start"></div>
+  </div>
+</nav>
+ 
+  
+      
+
+    
+
+    <section class="section">
+        <div class="container is-fullhd">
+          <h1 class="title">
+            Get Request Status
+          </h1>
+          <p class="subtitle">
+            Enter the ticket number to get the latest  <strong>status</strong>!
+          </p>
+
+          <form action="search" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+        <!-- <label for="search">Enter the ticket number</label> -->
+        <!-- <input type="text" name="ticketnumber"> -->
+        <input class="input is-danger" name="ticketnumber" type="text" placeholder="Enter the Ticket Number">
+        <!-- <input type="submit" name="action" value="press"> -->
+        <br>
+        <br>
+        <button onclick="action" class="button has-background-danger-dark has-text-white  is-small is-fullwidth">Search</button>
+        </form>
+
+        <br>
+
+
+          
+          
+
+          <hr>
+
+          <div id="content" name="content">
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
+      </section>
+
+      <br><br>
+          
+            
+            <img class="is-3by1" width="100%" src="https://raw.githubusercontent.com/Himanshugiri195/adhoc_two/main/footer_wave.svg?token=AG4OJM4DR7AR4CSI5JTR7NS7WPGCY" alt="" srcset="">
+        
+        
+</body>
+</html>

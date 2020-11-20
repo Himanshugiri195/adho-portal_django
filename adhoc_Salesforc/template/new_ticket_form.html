@@ -1,0 +1,690 @@
+{% extends 'newtick.html' %} {% block content %}
+<div class="container">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+  <script>
+    $(document).ready(function() {
+
+      $("#myInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+      });
+
+  
+     
+  } );
+
+
+  $(document).ready(function() {
+    var table =  $('#tableone').DataTable();
+     
+      $('#salesorg').on('change', function () {
+                     table.columns(1).search( this.value ).draw();
+                 } );
+                 $('#attri').on('change', function () {
+                     table.columns(13).search( this.value ).draw();
+                 } );
+                 $('#importzone').on('change', function () {
+                  table.columns(2).search( this.value ).draw();
+              } );
+      
+
+      $('#reqcateg').change(function(){
+
+        if(this.value =='Pricing' || this.value =='Empties Deposites' )
+        {
+          $('#empt_plus_pricing').show();
+        }
+        else{
+          $('#empt_plus_pricing').hide();
+        }
+
+        if(this.value =='Customer Adjustment')
+        {
+          $('#ship_add').show();
+        }
+        else{
+          $('#ship_add').hide();
+        }
+
+        if(this.value =='Portfolio')
+        {
+          $('#portf').show();
+        }
+        else{
+          $('#portf').hide();
+        }
+
+        if(this.value =='Operational Issue')
+        {
+          $('#operationissue').show();
+        }
+        else{
+          $('#operationissue').hide();
+        }
+
+
+      }).change();
+      
+
+                 
+ });
+
+
+
+  </script>
+
+  <h1 class="title">{{name}}</h1>
+  <p class="subtitle">Fill the following form to generate a new ticket</p>
+  <hr />
+  <form action="add" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="cat">
+      <h5>Request Category</h5>
+    </label>
+
+    <select id="reqcateg" class="form-control" name="reqcat" class="is-fullwidth">
+      <option value="None"></option>
+      <option>Pricing</option>
+      <option>Portfolio</option>
+      <option>Empties Deposites</option>
+      <option>Customer Adjustment</option>
+      <option>Material Adjustment</option>
+      <option>Operational Issue</option>
+      <option>Others</option>
+    </select>
+
+    <br />
+
+    <label for="reqtype">
+      <h5>Request Type:</h5>
+    </label>
+
+    <select class="form-control" name="retype">
+      <option>VOP</option>
+      <option>Finished Goods</option>
+      <option>Air Freight</option>
+      <option>Prime</option>
+    </select>
+
+    <br />
+
+    <label for="exflow">
+      <h5>Exporting Flow</h5>
+    </label>
+
+    <select class="form-control" name="expflow">
+      <option>EUR</option>
+      <option>MAZ</option>
+      <option>NAZ</option>
+      <option>SAZ</option>
+      <option>APAC</option>
+    </select>
+    <br>
+    <div id="empt_plus_pricing" style='display:none;'>
+
+      <label for="">
+        <h5>Suggested Price</h5>
+      </label>
+      <input class="input" type="text" placeholder="Text input">
+      <br>
+      <br>
+      <label for="reqtype">
+        <h5>Suggested Currency</h5>
+      </label>
+  
+      <select class="form-control" name="curtype">
+        <option>USD</option>
+        <option>EUR</option>
+        <option>GBP</option>
+        
+      </select>
+      <br>
+      <label for="reqtype">
+        <h5>Valid From</h5>
+      </label>
+      <input class="input" type="text" placeholder="Text input">
+      <br>
+      <br>
+      <label for="reqtype">
+        <h5>Valid To</h5>
+      </label>
+      <input class="input" type="text" placeholder="Text input">
+
+    </div>
+
+    <div id="ship_add">
+      <br>
+      <label for="">
+        <h5>Change of Ship to Address</h5>
+      </label>
+      <input class="input" type="text" placeholder="Text input">
+
+    </div>
+
+
+    <div id="portf">
+      <label >
+        <h5>Plant</h5>
+      </label>
+      <input class="input" type="text" placeholder="Text input">
+    </div>
+
+    <div id="operationissue">
+      <label for="">
+        <h5>Order Number</h5>
+      </label>
+      <input class="input" type="text" placeholder="Text input">
+      <br>
+      <br>
+      <label for="">
+
+        <h5>Plant</h5>
+      </label>
+      <input class="input" type="text" placeholder="Text input">
+    </div>
+
+    <hr />
+
+    <br />
+
+    <br />
+
+    <br />
+    <div class="tile is-ancestor">
+      <div class="tile is-4 is-vertical is-parent">
+        <div class="tile is-child box">
+          <p class="title">Attribute</p>
+          <div class="select is-info">
+            <select id="attri">
+              <option value>ALL</option>
+              <option value="intercompany">Intercompany</option>
+              <option value="distributor">Distributor</option>
+            </select>
+          </div>
+          <hr />
+          <canvas id="doughnut-chart_o" width="70" height="70"></canvas>
+        </div>
+        <div class="tile is-child box">
+          <p class="title">Custommers(payers)</p>
+          <p class="subtitle">404</p>
+          <br />
+          <p class="title">Ship To</p>
+          <p class="subtitle">981</p>
+          <br />
+          <p class="title">Sold To</p>
+          <p class="subtitle">982</p>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <div class="tile is-child box">
+          <p class="title">Importing Zone</p> 
+          <div class="field">
+            <div class="control">
+              <div class="select is-info">
+                <select id="importzone">
+                  <option value>ALL</option>
+                  <option value="EUR">EUR</option>
+                  <option value="MAZ">MAZ</option>
+                  <option value="NAZ">NAZ</option>
+                  <option value="SAZ">SAZ</option>
+                  <option value="APAC">APAC</option>
+                  <option value="AFRICA">Africa</option>
+                  <option value="APAC">APAC</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <canvas id="bar-chart-horizontal" width="70" height="30"></canvas>
+          <hr />
+          <p class="title">Exporting Zone</p>
+          <canvas id="bar-chart-horizontal-exportingflow" width="70" height="30"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child box">
+          <p class="title">Customer Selection Table</p>   
+          <hr>
+          <div>    
+            <style>
+              table.scroll {
+                width: 100%;
+                border-spacing: 0;
+                border: 2px solid black;
+              }
+
+              
+
+              table.scroll tbody,
+              table.scroll thead {
+                display: block;
+              }
+
+              thead tr th {
+                height: 40px;
+                line-height: 70px;
+                /*text-align: left;*/
+              }
+
+              table.scroll tbody {
+                height: 400px;
+                overflow-y: auto;
+                overflow-x: hidden;
+              }
+
+              tbody {
+                border-top: 1px solid black;
+              }
+
+              tbody td,
+              thead th {
+                width: 20%;
+                border-right: 1px solid black;
+              }
+            </style>
+
+            <div class="field">
+              <!-- <div class="control">
+                <input id="myInput" class="input is-info" type="text" placeholder="Enter the Value" />
+              </div> -->
+              <br>
+              <div>
+                
+                <div class="field">
+                  <label for="">Select Sales Org</label>
+                  <div class="control">
+                    
+
+                      <select id="salesorg" class="form-control" name="reqcat" class="is-fullwidth">
+                        <option value>ALL</option>
+                        <option value="BE11">BE11</option>
+                        <option value="DE11">DE11</option>
+                        <option value="GB11">GB11</option>
+                        <option value="HQ06">HQ06</option>
+                        <option value="HQ98">HQ98</option>
+                      </select>
+       
+                  </div>
+                </div>
+
+              </div>
+              
+            </div>
+
+            <br>
+
+            <table id="tableone" class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth scroll">
+              <thead>
+                <tr>
+                  <td> <strong>Select</strong> </abbr></td>
+                  <td> <strong> Sales Organisation</strong> </td>
+                  <td><strong>Importing Zone</strong> </td>
+                  <td><strong>Sold To</strong> </td>
+                  <td><strong>Ship To</strong> </td>
+                  <td><strong>Ship to Name</strong> </td>
+                  <td><strong>Ship to Country</strong> </td>
+                  <td><strong>Ship Condition</strong> </td>
+                  <td><strong>Payer</strong> </td>
+                  <td><strong>Payer Name</strong> </td>
+                  <td><strong>Profit Center</strong> </td>
+                  <td><strong>Incoterms</strong> </td>
+                  <td><strong>Currency</strong> </td>
+                  <td><strong>Attributes</strong> </td>
+                </tr>
+              </thead>
+              <tbody id="myTable">
+                {% for msg in db_data %}
+                <tr>
+                  <td>
+                    <input type="checkbox" name="case[]" value="{{msg.soldto}}" class="case" />
+                  </td>
+                  <td class="type">{{msg.salesorg}}</td>
+                  <td>{{msg.importzone}}</td>
+                  <td>{{msg.soldto}}</td>
+                  <td>{{msg.shipto}}</td>
+                  <td>{{msg.shiptoname}}</td>
+                  <td>{{msg.shiptocountry}}</td>
+                  <td>{{msg.shipcond}}</td>
+                  <td>{{msg.payer}}</td>
+                  <td>{{msg.payername}}</td>
+                  <td>{{msg.profitcen}}</td>
+                  <td>{{msg.incoterm}}</td>
+                  <td>{{msg.currency}}</td>
+                  <td class="attri">{{msg.attri}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+    <p class="title">Selected Values</p>
+
+          <label for=""> <h5>Sold To</h5></label>
+          <input
+            placeholder="value clicked on the graph"
+            class="input is-info"
+            name="sold_to"
+            type="text"
+            id="val2"
+          />
+          <br /><br />
+          <label for=""> <h5>Ship To</h5></label>
+          <input
+            placeholder="value clicked on the graph"
+            class="input is-info"
+            name="ship_to"
+            id="val3"
+            type="text"
+          />
+
+          <br>
+          <br>
+
+          <div class="tile is-ancestor">
+            <div class="tile is-parent">
+              <div class="tile is-child box">
+                <p class="title">SKU Selection Table</p>
+                <hr>
+                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                  <thead>
+                    <tr>
+                      <td>Select</td>
+                      <td><strong>SKU</strong></td>
+                      <td><strong>Material Description</strong></td>
+                      <td><strong>Brand</strong></td>
+                      <td><strong>Container Size</strong></td>
+                      <td><strong>Second Pack</strong></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for skuval in sku_db %}
+                    <tr>
+                      <td> <input type="checkbox" name="sku[]" value="{{skuval.sku}}" class="sku_val" /></td>
+                      <td>{{skuval.sku}}</td>
+                      <td>{{skuval.matdesc}}</td>
+                      <td>{{skuval.brand}}</td>
+                      <td>{{skuval.contsize}}</td>
+                      <td>{{skuval.secondpack}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <br>
+                
+              </div>
+            </div>
+          </div>
+          <label for=""> <h5>SKU Selected</h5></label>
+          <input
+            placeholder="Sku Selected"
+            class="input is-info"
+            name="sku_sel"
+            id="sku_one"
+            type="text"
+          />
+          <br>
+          <br>
+
+    <h5>Select the files</h5>
+    
+    
+    <div id="file-js-example" class="file has-name is-fullwidth">
+      <label class="file-label">
+        <input name="myfile" id="myfile" required multiple class="file-input" type="file" name="resume">
+        <span class="file-cta">
+          <span class="file-icon">
+            <i class="fas fa-upload"></i>
+          </span>
+          <span class="file-label">
+            Choose Files…
+          </span>
+        </span>
+        <span class="file-name">
+          No file uploaded
+        </span>
+      </label>
+    </div>
+
+    <script>
+      const fileInput = document.querySelector('#file-js-example input[type=file]');
+      fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+
+          const fileName = document.querySelector('#file-js-example .file-name');
+
+          if (fileInput.files.length > 1) {
+            fileName.textContent = " "
+            for (var j = 0; j < fileInput.files.length; j++) {
+              fileName.textContent += " " + fileInput.files[j].name
+            }
+
+          }
+
+          else {
+            fileName.textContent = fileInput.files[0].name + " file";
+          }
+
+        }
+      }
+    </script>
+
+
+    <div class="field">
+      <div class="control">
+        <br />
+
+        <textarea name="testarea" class="textarea is-medium" placeholder="Enter the message" required></textarea>
+      </div>
+    </div>
+
+    <button type="submit" name="action" class="button has-text-white has-background-danger-dark is-medium is-fullwidth">
+      Submit
+    </button>
+  </form>
+  
+
+  <script>
+    new Chart(document.getElementById("doughnut-chart_o"), {
+      type: "doughnut",
+      data: {
+        labels: ["Intercompany", "Distributor"],
+        datasets: [
+          {
+            label: "Attribute",
+            backgroundColor: ["#12239E", "#118DFF"],
+            data: [494, 658],
+          },
+        ],
+      },
+      options: {
+        cutoutPercentage: 65,
+      },
+    });
+  </script>
+  <script>
+    $("input[name='case[]']").click(function () {
+      var values = "";
+      var shipto = "";
+      $.each($("input[name='case[]']:checked"), function (index, value) {
+        var data = $(this).parents("tr:eq(0)");
+        if (index > 0) {
+          values;
+          shipto;
+        }
+
+        values += $(data).find("td:eq(3)").text() + ", ";
+        shipto += $(data).find("td:eq(4)").text() + ", ";
+      });
+
+      document.getElementById("val2").value = values;
+      document.getElementById("val3").value = shipto;
+    });
+  </script>
+
+  <script>
+    $("input[name='sku[]']").click(function () {
+      var skucode ="";
+      $.each($("input[name='sku[]']:checked"), function (index, value) {
+        var data = $(this).parents("tr:eq(0)");
+        if (index > 0) {
+          skucode;
+        }
+
+        skucode += $(data).find("td:eq(1)").text() + ", ";
+        
+      });
+
+      document.getElementById("sku_one").value = skucode;
+      
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    new Chart(document.getElementById("bar-chart-horizontal"), {
+      type: "horizontalBar",
+      data: {
+        labels: ["EUR", "MAZ", "NAZ", "APAC", "Travel Retail", "Africa", "SAZ"],
+        datasets: [
+          {
+            label: "Count of Importing Zone",
+            backgroundColor: [
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+            ],
+            data: [259, 251, 190, 130, 129, 82, 71],
+          },
+        ],
+      },
+      options: {
+        legend: { display: false },
+        title: {
+          display: false,
+          text: "Count of Importing Zone",
+        },
+
+        onClick: function (e) {
+          var activePoints = myChart.getElementsAtEvent(e);
+          var selectedIndex = activePoints[0]._index;
+
+          document.getElementById("val2").value = this.data.datasets[0].data[
+            selectedIndex
+          ];
+        }
+      },
+    });
+  </script>
+  <script>
+    new Chart(document.getElementById("bar-chart-horizontal-exportingflow"), {
+      type: "horizontalBar",
+      data: {
+        labels: [
+          "EU",
+          "MX",
+          "US",
+          "EU/Prime",
+          "MX/EU",
+          "LAN",
+          "US Prime",
+          "LAS/AR",
+          "NAZ",
+          "Other",
+        ],
+        datasets: [
+          {
+            label: "Count of Flow",
+            backgroundColor: [
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+              "#118DFF",
+            ],
+            data: [451, 280, 130, 64, 52, 37, 30, 23, 13, 30],
+          },
+        ],
+      },
+      options: {
+        legend: { display: false },
+        title: {
+          display: false,
+          text: "Count of Importing Zone",
+        },
+      },
+    });
+  </script>
+  <!-- <script>
+    $("#salesorg").change(function(){
+      var choice = $(this).val().toUpperCase();
+      $("table tr").each(function (index) {
+                  if (index !== 0) {
+                      $row = $(this);
+                      var id = $row.find("td.type").text().toUpperCase();
+                      if (id.indexOf(choice) == -1) {
+                          $row.hide();
+                      }
+                      else {
+                          $row.show();
+                      }
+                  }
+              });
+  });
+
+  $("#attri").change(function(){
+    var choice = $(this).val().toUpperCase();
+    $("table tr").each(function (index) {
+                if (index !== 0) {
+                    $row = $(this);
+                    var id = $row.find("td.attri").text().toUpperCase();
+                    if (id.indexOf(choice) == -1) {
+                        $row.hide();
+                    }
+                    else {
+                        $row.show();
+                    }
+                }
+
+            });
+});
+  
+  
+  </script> -->
+</div>
+
+{% endblock %}

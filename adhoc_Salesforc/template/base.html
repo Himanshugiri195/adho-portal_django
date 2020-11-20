@@ -1,0 +1,44 @@
+{% load static %}
+
+
+<html>
+<head>
+    <title>{% block title %}Tim's Site{% endblock %}</title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+</head>
+<body style="background-image: url('https://raw.githubusercontent.com/Himanshugiri195/adhoc_two/main/Web%201920%20%E2%80%93%206.svg?token=AG4OJMZ5ZSBY7IM6D4XFM627VEENY'); background-repeat: no-repeat;
+background-size: cover;  ">
+    
+    <ul>
+      <li><a href="" class="logo"><img height="40" src="https://raw.githubusercontent.com/Himanshugiri195/adhoc_two/main/Component%202%20%E2%80%93%201.svg?token=AG4OJM6AB5ZS3WWLIRHF6JS7VEOEC" alt="" srcset=""></a>
+        <li><a href="{% url 'checkreq' %}">Check Status</a></li>
+        <li><a href="{% url 'create' %}">New Ticket</a></li>
+        
+        </li>
+      </ul>
+
+
+    <div id="content" name="content">
+	{% block content %}
+	{% endblock %}
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+<!-- <form action="search" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+    <label for="search">Enter the ticket number</label>
+    <input type="text" name="ticketnumber">
+
+    <input type="submit" name="action" value="press">
+    </form> -->

@@ -1,0 +1,60 @@
+{% extends 'checkstat.html' %}
+
+{% block content %}
+
+<!-- 
+Case status {{result}} -->
+
+<br>
+<table class="table is-bordered is-striped is-hoverable is-fullwidth">
+    
+    
+    <tbody>
+      <tr>
+        <th>1.</th>
+        <td><strong>Case Number</strong>
+        </td>
+        <td>{{casenumber}}</td>
+        </tr>
+      <tr class="is-selected is-danger">
+        <th>2.</th>
+        <td><strong>Status</strong></td>
+        <td>{{result}}</td>
+        
+         </tr>
+         <tr>
+            <th>3.</th>
+            <td><strong>Type </strong>
+            </td>
+            <td>{{type}}</td>
+            </tr>
+          <tr>
+            <th>4.</th>
+            <td><strong>Subject</strong></td>
+            <td>{{subject}}</td>
+            
+             </tr>
+             <tr>
+                <th>5.</th>
+                <td><strong>Priority</strong>
+                </td>
+                <td>{{priority}}</td>
+                </tr>
+              <tr>
+                <th>6.</th>
+                <td><strong>Date Created</strong></td>
+                <td>{{credate}}</td>
+                
+                 </tr>
+     
+      
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+{% endblock %}
